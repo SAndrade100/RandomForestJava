@@ -5,13 +5,12 @@ import java.util.*;
 public class DecisionTree {
     private Node root;
 
-    // Classe para representar os nós da árvore
     private static class Node {
         double splitValue;
         int featureIndex;
         Node left;
         Node right;
-        Integer label; // Rótulo do nó (se for folha)
+        Integer label;
 
         public Node(Integer label) {
             this.label = label;
@@ -23,19 +22,16 @@ public class DecisionTree {
         }
     }
 
-    // Método público para treinar a árvore
     public void train(List<double[]> data, List<Integer> labels) {
         root = buildTree(data, labels);
     }
 
     // Método recursivo para construir a árvore
     private Node buildTree(List<double[]> data, List<Integer> labels) {
-        // Caso base: se todos os rótulos forem iguais, retorne uma folha
         if (labels.stream().distinct().count() == 1) {
             return new Node(labels.get(0));
         }
 
-        // Encontre o melhor ponto de divisão
         int bestFeature = -1;
         double bestSplitValue = 0;
         double bestGini = Double.MAX_VALUE;
@@ -53,7 +49,6 @@ public class DecisionTree {
             }
         }
 
-        // Divida os dados com base na melhor divisão encontrada
         List<double[]> leftData = new ArrayList<>();
         List<double[]> rightData = new ArrayList<>();
         List<Integer> leftLabels = new ArrayList<>();
@@ -69,7 +64,6 @@ public class DecisionTree {
             }
         }
 
-        // Crie o nó atual e chame recursivamente para os filhos
         Node node = new Node(bestSplitValue, bestFeature);
         node.left = buildTree(leftData, leftLabels);
         node.right = buildTree(rightData, rightLabels);
@@ -107,7 +101,6 @@ public class DecisionTree {
                 ((double) rightCount / data.size()) * rightGini;
     }
 
-    // Método público para realizar predições
     public int predict(double[] features) {
         Node node = root;
         while (node.label == null) {
